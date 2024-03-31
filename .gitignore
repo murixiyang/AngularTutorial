@@ -1,0 +1,29 @@
+# Dependency directories
+/node_modules
+
+# Compiled output
+/dist
+/out-tsc
+
+# Log files
+*.log
+
+# IDE and editor files
+.idea/
+.vscode/
+
+# Compiled JavaScript files
+*.js
+*.js.map
+
+# Generated files by Webpack
+*.bundle.js
+*.chunk.js
+
+# Environment variables
+.env
+.env.prod
+.env.dev
+
+# Debug files
+.DS_Store
