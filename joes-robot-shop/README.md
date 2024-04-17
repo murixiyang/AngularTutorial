@@ -3,8 +3,13 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.0.0.
 
 ## Clone repo
+
 To clone the repo, go to `https://github.com/jmcooper/joes-robot-shop.git`.
 
+## Start server
+
+To start backend: go into api-server, `npm start`
+To start frontend: `ng serve --open`
 
 ## Development server
 
