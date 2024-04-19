@@ -4,7 +4,7 @@ import { NgIf, NgFor, NgClass } from '@angular/common';
 import { Product } from '../product';
 import { ProductDetailComponent } from '../product-detail/product-detail.component';
 import { ProductService } from '../product.service';
-import { Subscription, tap } from 'rxjs';
+import { EMPTY, Subscription, catchError, tap } from 'rxjs';
 
 @Component({
   selector: 'pm-product-list',
@@ -29,8 +29,14 @@ export class ProductListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.sub = this.productSvc
       .getProducts()
-      .pipe(tap(() => console.log('In product-list init pipeline')))
-      .subscribe((products) => (this.products = products));
+      .pipe(
+        tap(() => console.log('In product-list init pipeline')),
+        catchError((err) => {
+          this.errorMessage = err;
+          return EMPTY;
+        })
+      )
+      .subscribe({ next: (products) => (this.products = products) });
   }
   ngOnDestroy(): void {
     this.sub.unsubscribe();
