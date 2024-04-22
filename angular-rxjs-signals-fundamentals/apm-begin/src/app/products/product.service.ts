@@ -1,6 +1,14 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
+import {
+  Observable,
+  catchError,
+  map,
+  of,
+  switchMap,
+  tap,
+  throwError,
+} from 'rxjs';
 import { Product } from './product';
 import { ProductData } from './product-data';
 import { HttpErrorService } from '../utilities/http-error.service';
@@ -36,11 +44,10 @@ export class ProductService {
     const productUrl = this.productsUrl + '/' + id;
     return this.http.get<Product>(productUrl).pipe(
       tap(() => console.log('Get single product')),
+      switchMap((product) => this.getProductWithReviews(product)),
       catchError((err) => this.handleError(err))
     );
   }
-
-
 
   getProductWithReviews(product: Product): Observable<Product> {
     if (product.hasReviews) {
