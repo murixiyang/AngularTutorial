@@ -17,7 +17,6 @@ export class ProductListComponent {
 
   // Declarative approach
   readonly products$ = this.productSvc.products$.pipe(
-    tap(() => console.log('In product-list init pipeline')),
     catchError((err) => {
       this.errorMessage = err;
       return EMPTY;
@@ -25,11 +24,11 @@ export class ProductListComponent {
   );
 
   // Selected product id to highlight the entry
-  selectedProductId: number = 0;
+  readonly selectedProductId$ = this.productSvc.productSelected$;
 
   constructor(private productSvc: ProductService) {}
 
   onSelected(productId: number): void {
-    this.selectedProductId = productId;
+    this.productSvc.productSelected(productId);
   }
 }
