@@ -1,21 +1,24 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, of, tap, throwError } from 'rxjs';
+import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 import { Product } from './product';
 import { ProductData } from './product-data';
 import { HttpErrorService } from '../utilities/http-error.service';
+import { ReviewService } from '../reviews/review.service';
+import { Review } from '../reviews/review';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
   // Wrong url for error handling
-  private productsUrl = 'api/productsss';
-  // private productsUrl = 'api/products';
+  // private productsUrl = 'api/productsss';
+  private productsUrl = 'api/products';
 
   constructor(
     private http: HttpClient,
-    private errorHandleSvc: HttpErrorService
+    private errorHandleSvc: HttpErrorService,
+    private reviewSvc: ReviewService
   ) {}
 
   getProducts(): Observable<Product[]> {
@@ -35,6 +38,18 @@ export class ProductService {
       tap(() => console.log('Get single product')),
       catchError((err) => this.handleError(err))
     );
+  }
+
+
+
+  getProductWithReviews(product: Product): Observable<Product> {
+    if (product.hasReviews) {
+      return this.http
+        .get<Review[]>(this.reviewSvc.getReviewUrl(product.id))
+        .pipe(map((reviews) => ({ ...product, reviews } as Product)));
+    } else {
+      return of(product);
+    }
   }
 
   private handleError(err: HttpErrorResponse): Observable<never> {
