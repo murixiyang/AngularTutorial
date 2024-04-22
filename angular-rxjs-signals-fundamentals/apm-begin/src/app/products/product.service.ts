@@ -23,22 +23,21 @@ export class ProductService {
   // private productsUrl = 'api/productsss';
   private productsUrl = 'api/products';
 
+  // Declarative approach
+  readonly products$ = this.http.get<Product[]>(this.productsUrl).pipe(
+    tap(() => console.log('In http pipe')),
+    catchError((err) => {
+      console.error(err);
+      // Use local replacement data
+      return of(ProductData.products);
+    })
+  );
+
   constructor(
     private http: HttpClient,
     private errorHandleSvc: HttpErrorService,
     private reviewSvc: ReviewService
   ) {}
-
-  getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.productsUrl).pipe(
-      tap(() => console.log('In http pipe')),
-      catchError((err) => {
-        console.error(err);
-        // Use local replacement data
-        return of(ProductData.products);
-      })
-    );
-  }
 
   getProduct(id: number): Observable<Product> {
     const productUrl = this.productsUrl + '/' + id;
