@@ -32,8 +32,20 @@ export class CartService {
   );
 
   addToCart(product: Product): void {
-    // Change signal
-    this.cartItems.update((items) => [...items, { product, quantity: 1 }]);
+    // Check if the product is already in the cart
+    if (this.cartItems().some((item) => item.product.id === product.id)) {
+      // if in the cart, update the quantity
+      this.cartItems.update((items) =>
+        items.map((item) =>
+          item.product.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      );
+    } else {
+      // if not in the cart, add the product
+      this.cartItems.update((items) => [...items, { product, quantity: 1 }]);
+    }
   }
 
   removeFromCart(cartItem: CartItem): void {
