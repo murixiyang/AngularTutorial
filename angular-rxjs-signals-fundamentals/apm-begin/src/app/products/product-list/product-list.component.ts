@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { NgIf, NgFor, NgClass, AsyncPipe } from '@angular/common';
 import { ProductDetailComponent } from '../product-detail/product-detail.component';
 import { ProductService } from '../product.service';
-import { EMPTY, catchError, tap } from 'rxjs';
 
 @Component({
   selector: 'pm-product-list',
@@ -13,18 +12,13 @@ import { EMPTY, catchError, tap } from 'rxjs';
 })
 export class ProductListComponent {
   pageTitle = 'Products';
-  errorMessage = '';
 
   // Declarative approach
-  readonly products$ = this.productSvc.products$.pipe(
-    catchError((err) => {
-      this.errorMessage = err;
-      return EMPTY;
-    })
-  );
+  products = this.productSvc.products;
+  errorMessage = this.productSvc.productsError;
 
   // Selected product id to highlight the entry
-  readonly selectedProductId$ = this.productSvc.productSelected$;
+  selectedProductId = this.productSvc.selectedProductId;
 
   constructor(private productSvc: ProductService) {}
 
