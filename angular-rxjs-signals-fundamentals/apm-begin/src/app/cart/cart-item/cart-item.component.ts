@@ -20,12 +20,10 @@ export class CartItemComponent {
 
   cartItemSig = signal<CartItem>(undefined!);
 
-  // Quantity available (hard-coded to 8)
-  // Mapped to an array from 1-8
-  qtyArr = [...Array(8).keys()].map((x) => x + 1);
-
   // Calculate the extended price
-  exPriceSig = computed(() => this.cartItemSig().quantity * this.cartItemSig().product.price);
+  exPriceSig = computed(
+    () => this.cartItemSig().quantity * this.cartItemSig().product.price
+  );
 
   onQuantitySelected(quantity: number): void {
     this.cartSvc.updateQuantity(this.cartItemSig(), quantity);
@@ -33,5 +31,14 @@ export class CartItemComponent {
 
   removeFromCart(): void {
     this.cartSvc.removeFromCart(this.cartItemSig());
+  }
+
+  getStockQuantity(): number {
+    return this.cartSvc.getStockQuantity(this.cartItemSig());
+  }
+
+  getStockQuantityArray(): number[] {
+    const stockQuantity = this.getStockQuantity();
+    return Array.from({ length: stockQuantity }, (_, i) => i + 1);
   }
 }

@@ -15,9 +15,10 @@
         (ngModelChange)="onQuantitySelected($event)"
       >
         <option disabled value="">--Select a quantity--</option>
-        <option *ngFor="let q of qtyArr">{{ q }}</option>
+        <option *ngFor="let q of getStockQuantityArray()">{{ q }}</option>
       </select>
     </div>
+
     <div class="col-md-2 text-center">
       {{ exPriceSig() | currency }}
     </div>

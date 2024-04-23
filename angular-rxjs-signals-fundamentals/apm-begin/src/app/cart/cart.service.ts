@@ -9,7 +9,7 @@ export class CartService {
   cartItems = signal<CartItem[]>([]);
 
   cartCount = computed(() =>
-    this.cartItems().reduce((accQty, item) => accQty + item.quantity, 0)
+    this.cartItems().reduce((accQty, item) => accQty + Number(item.quantity), 0)
   );
 
   subTotal = computed(() =>
@@ -60,5 +60,9 @@ export class CartService {
         item.product.id === cartItem.product.id ? { ...item, quantity } : item
       )
     );
+  }
+
+  getStockQuantity(cartItem: CartItem): number {
+    return cartItem.product.quantityInStock ?? 0;
   }
 }
