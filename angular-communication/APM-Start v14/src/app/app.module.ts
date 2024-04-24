@@ -23,15 +23,15 @@ import { UserModule } from './user/user.module';
     HttpClientModule,
     HttpClientInMemoryWebApiModule.forRoot(ProductData),
     UserModule,
-    AppRoutingModule
+    AppRoutingModule,
   ],
   declarations: [
     AppComponent,
     ShellComponent,
     MenuComponent,
     WelcomeComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
