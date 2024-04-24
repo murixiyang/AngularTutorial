@@ -3,6 +3,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { IProduct } from './product';
 import { ProductService } from './product.service';
 import { CriteriaComponent } from '../shared/criteria/criteria.component';
+import { ProductParameterService } from './product-parameter.service';
 
 @Component({
   templateUrl: './product-list.component.html',
@@ -10,12 +11,10 @@ import { CriteriaComponent } from '../shared/criteria/criteria.component';
 })
 export class ProductListComponent implements OnInit, AfterViewInit {
   pageTitle = 'Product List';
-  showImage = false;
   includeDetail = true;
 
   @ViewChild(CriteriaComponent)
   filterComponent!: CriteriaComponent;
-  parentListFilter: string = '';
 
   imageWidth = 50;
   imageMargin = 2;
@@ -24,17 +23,26 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   filteredProducts: IProduct[] = [];
   products: IProduct[] = [];
 
-  constructor(private productService: ProductService) {}
-
-  ngAfterViewInit(): void {
-    this.parentListFilter = this.filterComponent.listFilter;
+  get showImage(): boolean {
+    return this.productParameterSvc.showImage;
   }
+  set showImage(value: boolean) {
+    this.productParameterSvc.showImage = value;
+  }
+
+  constructor(
+    private productService: ProductService,
+    private productParameterSvc: ProductParameterService
+  ) {}
+
+  ngAfterViewInit(): void {}
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe({
       next: (products) => {
         this.products = products;
-        this.performFilter(this.parentListFilter);
+        // Set child component value, will call set in child, and onValueChange in parent
+        this.filterComponent.listFilter = this.productParameterSvc.filterBy;
       },
       error: (err) => (this.errorMessage = err),
     });
@@ -45,6 +53,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   }
 
   onValueChange(value: string): void {
+    this.productParameterSvc.filterBy = value;
     this.performFilter(value);
   }
 

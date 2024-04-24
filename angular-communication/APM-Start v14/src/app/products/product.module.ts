@@ -18,14 +18,14 @@ import { ProductEditGuard } from './edit/product-edit-guard.service';
       {
         path: ':id/edit',
         canDeactivate: [ProductEditGuard],
-        component: ProductEditComponent
-      }
-    ])
+        component: ProductEditComponent,
+      },
+    ]),
   ],
   declarations: [
     ProductListComponent,
     ProductDetailComponent,
-    ProductEditComponent
-  ]
+    ProductEditComponent,
+  ],
 })
-export class ProductModule { }
+export class ProductModule {}
