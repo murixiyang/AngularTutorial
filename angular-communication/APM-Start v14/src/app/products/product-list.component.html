@@ -10,6 +10,7 @@
         class="col-md-10"
         [displayDetail]="includeDetail"
         [hitCount]="filteredProducts.length"
+        (valueChange)="onValueChange($event)"
       ></pm-criteria>
     </div>
 
