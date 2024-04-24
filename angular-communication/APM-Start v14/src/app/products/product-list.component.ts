@@ -1,7 +1,14 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 
 import { IProduct } from './product';
 import { ProductService } from './product.service';
+import { NgModel } from '@angular/forms';
 
 @Component({
   templateUrl: './product-list.component.html',
@@ -16,16 +23,18 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   errorMessage = '';
 
   @ViewChild('filterElement') filterElementRef: ElementRef | undefined;
+  @ViewChild(NgModel) filterInput: NgModel | undefined;
 
-  private _listFilter = '';
-  get listFilter(): string {
-    return this._listFilter;
-  }
+  listFilter = '';
+  // private _listFilter = '';
+  // get listFilter(): string {
+  //   return this._listFilter;
+  // }
 
-  set listFilter(value: string) {
-    this._listFilter = value;
-    this.performFilter(this.listFilter);
-  }
+  // set listFilter(value: string) {
+  //   this._listFilter = value;
+  //   this.performFilter(this.listFilter);
+  // }
 
   filteredProducts: IProduct[] = [];
   products: IProduct[] = [];
@@ -33,6 +42,9 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   constructor(private productService: ProductService) {}
 
   ngAfterViewInit(): void {
+    this.filterInput?.valueChanges?.subscribe(() =>
+      this.performFilter(this.listFilter)
+    );
     this.filterElementRef?.nativeElement.focus();
   }
 
