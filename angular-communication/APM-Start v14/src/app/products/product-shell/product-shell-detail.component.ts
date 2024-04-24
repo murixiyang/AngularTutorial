@@ -3,18 +3,21 @@ import { ProductService } from '../product.service';
 import { IProduct } from '../product';
 
 @Component({
-    selector: 'pm-product-shell-detail',
-    templateUrl: './product-shell-detail.component.html'
+  selector: 'pm-product-shell-detail',
+  templateUrl: './product-shell-detail.component.html',
 })
 export class ProductShellDetailComponent implements OnInit {
   pageTitle = 'Product Detail';
   // Need to handle null to allow for no selected product.
-  product: IProduct | null = null;  
+  // product: IProduct | null = null;
+
+  get product(): IProduct | null {
+    return this.productService.currentProduct;
+  }
+
   errorMessage = '';
 
-    constructor(private productService: ProductService) { }
+  constructor(private productService: ProductService) {}
 
-    ngOnInit() {
-    }
-
+  ngOnInit() {}
 }

@@ -41,8 +41,14 @@ export class ProductListComponent implements OnInit, AfterViewInit {
     this.productService.getProducts().subscribe({
       next: (products) => {
         this.products = products;
-        // Set child component value, will call set in child, and onValueChange in parent
-        this.filterComponent.listFilter = this.productParameterSvc.filterBy;
+        // Allows referencing the ViewChild property in ngOnInit and
+        // Prevents the 'Expression has changed after it was checked' error 
+        setTimeout(() => {
+          if (this.filterComponent) {
+            // Set child component value, will call set in child, and onValueChange in parent
+            this.filterComponent.listFilter =
+              this.productParameterSvc.filterBy;
+          }})
       },
       error: (err) => (this.errorMessage = err),
     });
