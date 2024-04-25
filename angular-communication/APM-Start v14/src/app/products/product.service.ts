@@ -5,7 +5,15 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 
-import { catchError, Observable, of, tap, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  Observable,
+  of,
+  Subject,
+  tap,
+  throwError,
+} from 'rxjs';
 
 import { IProduct } from './product';
 
@@ -17,10 +25,19 @@ export class ProductService {
 
   // Cache of products
   private products!: IProduct[];
+  private selectedProductSource = new BehaviorSubject<IProduct | null>(null);
+  // Exposed readonly observable of subject
+  selectedProductChanges$ = this.selectedProductSource.asObservable();
 
-  currentProduct: IProduct | null = null;
+  // Subject approach of currentProduct
 
   constructor(private http: HttpClient) {}
+
+  // Brodcast the selected product to all subscribers
+  changeSelectedProduct(selectedProduct: IProduct | null): void {
+    // Push data to observable sequence
+    this.selectedProductSource.next(selectedProduct);
+  }
 
   getProducts(): Observable<IProduct[]> {
     if (this.products) {
@@ -71,7 +88,7 @@ export class ProductService {
         const foundIndex = this.products.findIndex((item) => item.id === id);
         if (foundIndex > -1) {
           this.products.splice(foundIndex, 1);
-          this.currentProduct = null;
+          this.changeSelectedProduct(null);
         }
       }),
       catchError(this.handleError)
@@ -92,7 +109,7 @@ export class ProductService {
         // Add to cache
         tap((createdProduct) => {
           this.products.push(createdProduct);
-          this.currentProduct = createdProduct;
+          this.changeSelectedProduct(createdProduct);
         }),
         catchError(this.handleError)
       );

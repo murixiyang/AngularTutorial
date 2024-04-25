@@ -9,15 +9,17 @@ import { IProduct } from '../product';
 export class ProductShellDetailComponent implements OnInit {
   pageTitle = 'Product Detail';
   // Need to handle null to allow for no selected product.
-  // product: IProduct | null = null;
 
-  get product(): IProduct | null {
-    return this.productService.currentProduct;
-  }
+  product: IProduct | null = null;
 
   errorMessage = '';
 
   constructor(private productService: ProductService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Subscribe to the selectedProductChanges$ observable
+    this.productService.selectedProductChanges$.subscribe((selectedProduct) => {
+      this.product = selectedProduct;
+    });
+  }
 }

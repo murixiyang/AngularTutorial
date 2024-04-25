@@ -1,15 +1,28 @@
 import { Component, OnInit } from '@angular/core';
+import { ProductService } from '../product.service';
 
 @Component({
-    templateUrl: './product-shell.component.html'
+  templateUrl: './product-shell.component.html',
 })
 export class ProductShellComponent implements OnInit {
   pageTitle = 'Products';
+  // Demonstrate subject multicating
   monthCount = 0;
 
-    constructor() { }
+  constructor(private ProductSvc: ProductService) {}
 
-    ngOnInit() {
-    }
-
+  ngOnInit() {
+    this.ProductSvc.selectedProductChanges$.subscribe((selectedProduct) => {
+      if (selectedProduct) {
+        const start = new Date(selectedProduct.releaseDate);
+        const now = new Date();
+        this.monthCount =
+          now.getMonth() -
+          start.getMonth() +
+          12 * (now.getFullYear() - start.getFullYear());
+      } else {
+        this.monthCount = 0;
+      }
+    });
+  }
 }
